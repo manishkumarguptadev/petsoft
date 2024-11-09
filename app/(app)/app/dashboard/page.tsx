@@ -1,5 +1,6 @@
 import Branding from "@/components/Branding";
 import ContentBlock from "@/components/ContentBlock";
+import PetAddButton from "@/components/PetAddButton";
 import PetDetails from "@/components/PetDetails";
 import PetList from "@/components/PetList";
 import SearchForm from "@/components/SearchForm";
@@ -22,6 +23,9 @@ export default async function Page() {
         <div className="relative md:col-span-1 md:col-start-1 md:row-span-full md:row-start-2">
           <ContentBlock>
             <PetList />
+            <div className="absolute bottom-4 right-4">
+              <PetAddButton />
+            </div>
           </ContentBlock>
         </div>
 
