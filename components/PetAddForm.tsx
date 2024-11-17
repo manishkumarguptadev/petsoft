@@ -7,8 +7,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { petFormClientSchema } from "@/lib/validationSchemas";
 import { z } from "zod";
+import { DEFAULT_PET_IMAGE } from "@/lib/constants";
+import { usePetContext } from "@/lib/hooks";
 
 export default function PetAddForm() {
+  const { handleAddPet } = usePetContext();
   const {
     register,
     trigger,
@@ -22,7 +25,12 @@ export default function PetAddForm() {
       action={async () => {
         const result = await trigger();
         if (!result) return;
-        console.log(getValues());
+        const petData = {
+          ...getValues(),
+          image: DEFAULT_PET_IMAGE,
+        };
+
+        await handleAddPet(petData);
       }}
       className="flex flex-col"
     >

@@ -41,7 +41,7 @@ function TopBar({ pet }: Props) {
     <div className="border-light flex items-center border-b bg-white px-8 py-5">
       <Image
         placeholder={"empty"}
-        src={pet.imageUrl}
+        src={pet.image}
         alt="Selected pet image"
         height={75}
         width={75}
