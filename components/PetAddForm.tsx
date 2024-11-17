@@ -10,7 +10,11 @@ import { z } from "zod";
 import { DEFAULT_PET_IMAGE } from "@/lib/constants";
 import { usePetContext } from "@/lib/hooks";
 
-export default function PetAddForm() {
+export default function PetAddForm({
+  onFormSubmission,
+}: {
+  onFormSubmission: () => void;
+}) {
   const { handleAddPet } = usePetContext();
   const {
     register,
@@ -31,6 +35,7 @@ export default function PetAddForm() {
         };
 
         await handleAddPet(petData);
+        onFormSubmission();
       }}
       className="flex flex-col"
     >
