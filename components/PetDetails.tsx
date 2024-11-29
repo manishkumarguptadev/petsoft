@@ -3,6 +3,7 @@
 import { usePetContext } from "@/lib/hooks";
 import Image from "next/image";
 import { Pet } from "@prisma/client";
+import PetEditButton from "./PetEditButton";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -49,6 +50,9 @@ function TopBar({ pet }: Props) {
       />
 
       <h2 className="ml-5 text-3xl font-semibold leading-7">{pet.name}</h2>
+      <div className="ml-auto space-x-2">
+        <PetEditButton />
+      </div>
     </div>
   );
 }
