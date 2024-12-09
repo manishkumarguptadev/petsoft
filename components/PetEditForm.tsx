@@ -6,8 +6,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { petFormClientSchema } from "@/lib/validationSchemas";
 import { z } from "zod";
+import { usePetContext } from "@/lib/hooks";
+import { DEFAULT_PET_IMAGE } from "@/lib/constants";
 
-export default function PetEditForm() {
+export default function PetEditForm({
+  onFormSubmission,
+}: {
+  onFormSubmission: () => void;
+}) {
+  const { handleEditPet, selectedPet } = usePetContext();
   const {
     register,
     trigger,
@@ -15,13 +22,29 @@ export default function PetEditForm() {
     formState: { errors },
   } = useForm<z.infer<typeof petFormClientSchema>>({
     resolver: zodResolver(petFormClientSchema),
+    defaultValues: {
+      name: selectedPet?.name,
+      ownerName: selectedPet?.ownerName,
+      image: "",
+      age: selectedPet?.age,
+      notes: selectedPet?.notes,
+    },
   });
   return (
     <form
       action={async () => {
         const result = await trigger();
         if (!result) return;
-        console.log(getValues());
+        const values = getValues();
+        const petData = {
+          ...values,
+          image: values.image
+            ? DEFAULT_PET_IMAGE
+            : (selectedPet?.image as string),
+        };
+
+        await handleEditPet(selectedPet?.id as string, petData);
+        onFormSubmission();
       }}
       className="flex flex-col"
     >

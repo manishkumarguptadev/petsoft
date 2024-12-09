@@ -1,6 +1,6 @@
 "use client";
 
-import { addPet } from "@/actions/actions";
+import { addPet, editPet } from "@/actions/actions";
 import { PetEssentials } from "@/lib/types";
 import { Pet } from "@prisma/client";
 import { createContext, useState } from "react";
@@ -17,6 +17,7 @@ type TPetContext = {
   selectedPet: Pet | undefined;
   numberOfPets: number;
   handleAddPet: (petData: PetEssentials) => Promise<void>;
+  handleEditPet: (petId: Pet["id"], newPetData: PetEssentials) => Promise<void>;
   handleChangeSelectedPetId: (id: Pet["id"]) => void;
 };
 
@@ -45,6 +46,22 @@ export default function PetContextProvider({
     }
   };
 
+  const handleEditPet = async (petId: Pet["id"], newPetData: PetEssentials) => {
+    const { updatedPet, error } = await editPet(petId, newPetData);
+    if (error) {
+      toast.warning(error);
+      return;
+    }
+    if (updatedPet) {
+      const updatedPets = pets.map((pet) => {
+        if (pet.id === updatedPet.id) return updatedPet;
+        return pet;
+      });
+      console.log(updatedPets);
+      setPets(updatedPets);
+    }
+  };
+
   const handleChangeSelectedPetId = (id: Pet["id"]) => {
     setSelectedPetId(id);
   };
@@ -57,6 +74,7 @@ export default function PetContextProvider({
         selectedPet,
         numberOfPets,
         handleAddPet,
+        handleEditPet,
         handleChangeSelectedPetId,
       }}
     >

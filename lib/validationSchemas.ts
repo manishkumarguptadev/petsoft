@@ -56,3 +56,4 @@ export const petFormServerSchema = z.object({
     .max(99999),
   notes: z.union([z.literal(""), z.string().trim().max(1000)]),
 });
+export const petIdSchema = z.string().cuid();

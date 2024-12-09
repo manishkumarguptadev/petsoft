@@ -1,6 +1,6 @@
 "use server";
 
-import { petFormServerSchema } from "@/lib/validationSchemas";
+import { petFormServerSchema, petIdSchema } from "@/lib/validationSchemas";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -31,4 +31,33 @@ export async function addPet(pet: unknown) {
       error: "Could not add pet.",
     };
   }
+}
+export async function editPet(petId: unknown, newPetData: unknown) {
+  // validation
+  const validatedPetId = petIdSchema.safeParse(petId);
+  const validatedPet = petFormServerSchema.safeParse(newPetData);
+
+  if (!validatedPetId.success || !validatedPet.success) {
+    return {
+      error: "Invalid pet data.",
+    };
+  }
+  try {
+    const updatedPet = await prisma.pet.update({
+      where: {
+        id: validatedPetId.data,
+      },
+      data: validatedPet.data,
+    });
+    revalidatePath("/app", "layout");
+    return {
+      updatedPet,
+    };
+  } catch (error) {
+    return {
+      error: "Could not edit pet.",
+    };
+  }
+
+  revalidatePath("/app", "layout");
 }
