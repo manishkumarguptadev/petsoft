@@ -10,8 +10,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { usePetContext } from "@/lib/hooks";
 
 export default function PetCheckoutButton() {
+  const { handleCheckoutPet, selectedPetId } = usePetContext();
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -30,7 +33,7 @@ export default function PetCheckoutButton() {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
-            onClick={() => console.log("pet deleted")}
+            onClick={async () => await handleCheckoutPet(selectedPetId!)}
           >
             Delete Pet
           </AlertDialogAction>

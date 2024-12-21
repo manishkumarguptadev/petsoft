@@ -58,6 +58,31 @@ export async function editPet(petId: unknown, newPetData: unknown) {
       error: "Could not edit pet.",
     };
   }
+}
 
-  revalidatePath("/app", "layout");
+export async function deletePet(petId: unknown) {
+  // validation
+  const validatedPetId = petIdSchema.safeParse(petId);
+  if (!validatedPetId.success) {
+    return {
+      error: "Invalid pet data.",
+    };
+  }
+
+  // database mutation
+  try {
+    const deletedPet = await prisma.pet.delete({
+      where: {
+        id: validatedPetId.data,
+      },
+    });
+    revalidatePath("/app", "layout");
+    return {
+      deletedPet,
+    };
+  } catch (error) {
+    return {
+      error: "Could not delete pet.",
+    };
+  }
 }
